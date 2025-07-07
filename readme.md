@@ -9,4 +9,4 @@ if not available in first cache store.
 ### Setup
 1. Run a redis instance
 2. Filename with name `filestore.kv`
-3. Run `CacheServiceMain.scala`
+3. Run the `com.arya.cli.Cli` main class (for example, via `sbt run`)
