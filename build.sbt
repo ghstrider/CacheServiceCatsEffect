@@ -13,7 +13,8 @@ lazy val cacheService = (project in file(".")).settings(
     "com.monovore" %% "decline-effect" % "2.2.0",
     "dev.profunktor" %% "redis4cats-effects" % "1.0.0",
     "dev.profunktor" %% "redis4cats-log4cats" % "1.0.0",
-    "org.typelevel" %% "log4cats-slf4j" % "2.1.1"
+    "org.typelevel" %% "log4cats-slf4j" % "2.1.1",
+    "org.scalatest" %% "scalatest" % "3.2.17" % Test
   ),
   mainClass := Some("com.arya.cli.Cli"),
   assembly / mainClass := Some("com.arya.cli.Cli"),
