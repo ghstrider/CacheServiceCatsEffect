@@ -1,5 +1,5 @@
 ## Cache Service
-This project is Cache Management Service, capable to getting data from another cache service,
+This project is Cache Management Service, capable of getting data from another cache service,
 if not available in first cache store.
 
 ### Supported Cache Store
