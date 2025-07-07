@@ -23,6 +23,6 @@ object CliArgs {
 
   val delKeyOpts: Opts[String] = Opts.option[String]("key", "Fetches value for given key")
   val delOpts: Opts[Del] = Opts.subcommand("del", "Delete key and its value from kvstore") {
-    getKeyOpts.map(Del)
+    delKeyOpts.map(Del)
   }
 }
