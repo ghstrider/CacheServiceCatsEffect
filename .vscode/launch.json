@@ -1,0 +1,68 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug Cache Service CLI",
+      "type": "scala",
+      "request": "launch",
+      "testClass": "com.arya.cli.Cli",
+      "args": ["get", "test-key"],
+      "jvmOptions": [],
+      "env": {},
+      "preLaunchTask": "sbt: compile"
+    },
+    {
+      "name": "Debug Cache Service Main",
+      "type": "scala", 
+      "request": "launch",
+      "testClass": "com.arya.CacheServiceMain",
+      "args": [],
+      "jvmOptions": [],
+      "env": {},
+      "preLaunchTask": "sbt: compile"
+    },
+    {
+      "name": "Debug Cache Service with Config",
+      "type": "scala",
+      "request": "launch", 
+      "testClass": "com.arya.CacheServiceMainWithConfig",
+      "args": [],
+      "jvmOptions": [],
+      "env": {
+        "REDIS_HOST": "localhost",
+        "REDIS_PORT": "6379",
+        "FILE_STORE_PATH": "filestore.kv",
+        "LOG_LEVEL": "DEBUG"
+      },
+      "preLaunchTask": "sbt: compile"
+    },
+    {
+      "name": "Debug Tests - FileKVStoreSpec",
+      "type": "scala",
+      "request": "launch",
+      "testClass": "com.arya.filestore.FileKVStoreSpec",
+      "args": [],
+      "jvmOptions": [],
+      "env": {},
+      "preLaunchTask": "sbt: compile"
+    },
+    {
+      "name": "Debug Tests - CacheServiceImplSpec", 
+      "type": "scala",
+      "request": "launch",
+      "testClass": "com.arya.cache.CacheServiceImplSpec",
+      "args": [],
+      "jvmOptions": [],
+      "env": {},
+      "preLaunchTask": "sbt: compile"
+    },
+    {
+      "name": "Attach Debugger",
+      "type": "scala",
+      "request": "attach",
+      "hostName": "localhost",
+      "port": 5005,
+      "timeout": 30000
+    }
+  ]
+}

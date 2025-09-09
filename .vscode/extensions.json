@@ -1,0 +1,28 @@
+{
+  "recommendations": [
+    "scalameta.metals",
+    "scala-lang.scala",
+    "ms-vscode.vscode-json",
+    "redhat.vscode-yaml",
+    "ms-vscode.vscode-typescript-next",
+    "streetsidesoftware.code-spell-checker",
+    "ms-vscode.test-adapter-converter",
+    "hbenl.vscode-test-explorer",
+    "formulahendry.terminal",
+    "ms-vscode.theme-tomorrow-kit",
+    "PKief.material-icon-theme",
+    "bradlc.vscode-tailwindcss",
+    "ms-vscode.vscode-markdown",
+    "yzhang.markdown-all-in-one",
+    "shd101wyy.markdown-preview-enhanced",
+    "ms-vscode.hexeditor",
+    "ms-vscode.vscode-git-graph",
+    "eamodio.gitlens",
+    "ms-vscode.remote-containers",
+    "ms-vscode-remote.remote-ssh"
+  ],
+  "unwantedRecommendations": [
+    "ms-vscode.vscode-typescript",
+    "ms-vscode.vscode-javascript"
+  ]
+}

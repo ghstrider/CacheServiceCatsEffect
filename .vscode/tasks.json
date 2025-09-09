@@ -1,0 +1,185 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "sbt: compile",
+      "type": "shell",
+      "command": "sbt",
+      "args": ["compile"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": true,
+        "clear": false
+      },
+      "problemMatcher": "$scala"
+    },
+    {
+      "label": "sbt: test",
+      "type": "shell",
+      "command": "sbt",
+      "args": ["test"],
+      "group": "test",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": true,
+        "clear": false
+      },
+      "problemMatcher": "$scala"
+    },
+    {
+      "label": "sbt: run",
+      "type": "shell",
+      "command": "sbt",
+      "args": ["run"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": true,
+        "clear": false
+      },
+      "problemMatcher": "$scala"
+    },
+    {
+      "label": "sbt: clean",
+      "type": "shell",
+      "command": "sbt",
+      "args": ["clean"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": true,
+        "clear": false
+      }
+    },
+    {
+      "label": "sbt: assembly",
+      "type": "shell",
+      "command": "sbt",
+      "args": ["assembly"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": true,
+        "clear": false
+      },
+      "problemMatcher": "$scala"
+    },
+    {
+      "label": "sbt: testOnly FileKVStoreSpec",
+      "type": "shell",
+      "command": "sbt",
+      "args": ["testOnly com.arya.filestore.FileKVStoreSpec"],
+      "group": "test",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": true,
+        "clear": false
+      },
+      "problemMatcher": "$scala"
+    },
+    {
+      "label": "sbt: testOnly CacheServiceImplSpec",
+      "type": "shell",
+      "command": "sbt",
+      "args": ["testOnly com.arya.cache.CacheServiceImplSpec"],
+      "group": "test",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": true,
+        "clear": false
+      },
+      "problemMatcher": "$scala"
+    },
+    {
+      "label": "sbt: console",
+      "type": "shell",
+      "command": "sbt",
+      "args": ["console"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": true,
+        "clear": false
+      },
+      "isBackground": true
+    },
+    {
+      "label": "Run CLI: get",
+      "type": "shell",
+      "command": "sbt",
+      "args": ["runMain com.arya.cli.Cli", "get", "--key", "${input:cacheKey}"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "Run CLI: put",
+      "type": "shell",
+      "command": "sbt",
+      "args": ["runMain com.arya.cli.Cli", "put", "--key", "${input:cacheKey}", "--value", "${input:cacheValue}"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "Run CLI: delete",
+      "type": "shell",
+      "command": "sbt",
+      "args": ["runMain com.arya.cli.Cli", "del", "--key", "${input:cacheKey}"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      }
+    }
+  ],
+  "inputs": [
+    {
+      "id": "cacheKey",
+      "description": "Cache key",
+      "default": "test-key",
+      "type": "promptString"
+    },
+    {
+      "id": "cacheValue", 
+      "description": "Cache value",
+      "default": "test-value",
+      "type": "promptString"
+    }
+  ]
+}

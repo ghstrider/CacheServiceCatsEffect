@@ -1,0 +1,66 @@
+{
+  // Scala Language Server settings
+  "metals.serverVersion": "latest.snapshot",
+  "metals.javaHome": "",
+  "metals.sbtScript": "",
+  "metals.millScript": "",
+  "metals.gradleScript": "",
+  
+  // Code formatting
+  "editor.formatOnSave": true,
+  "editor.formatOnPaste": true,
+  "scala.format.enable": true,
+  
+  // File associations
+  "files.associations": {
+    "*.sbt": "scala",
+    "*.sc": "scala"
+  },
+  
+  // Editor settings for Scala
+  "editor.tabSize": 2,
+  "editor.insertSpaces": true,
+  "editor.detectIndentation": false,
+  
+  // Exclude build artifacts from file explorer
+  "files.exclude": {
+    "**/target": true,
+    "**/.bloop": true,
+    "**/.metals": true,
+    "**/.ammonite": true,
+    "**/project/project": true,
+    "**/project/target": true
+  },
+  
+  // Search exclusions
+  "search.exclude": {
+    "**/target": true,
+    "**/.bloop": true,
+    "**/.metals": true
+  },
+  
+  // Scala-specific settings
+  "scala.trace.server": "verbose",
+  "metals.showImplicitArguments": true,
+  "metals.showInferredType": true,
+  "metals.superMethodLensesEnabled": true,
+  
+  // Terminal settings
+  "terminal.integrated.env.osx": {
+    "JAVA_HOME": ""
+  },
+  
+  // Git settings
+  "git.enableSmartCommit": true,
+  "git.autofetch": true,
+  
+  // Bracket pair colorization
+  "editor.bracketPairColorization.enabled": true,
+  "editor.guides.bracketPairs": true,
+  
+  // Code lens
+  "editor.codeLens": true,
+  
+  // Auto save
+  "files.autoSave": "onFocusChange"
+}
