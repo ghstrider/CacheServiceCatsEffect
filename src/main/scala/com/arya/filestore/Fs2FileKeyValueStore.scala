@@ -18,6 +18,8 @@ class Fs2FileKeyValueStore[F[_] : Files : Concurrent : Monad, K, V](filename: St
 
   private val fs2f = new Fs2File(absPath)
 
+  // Note: File operations in fs2 are not thread-safe for concurrent writes
+  // In production, consider using a database or proper file locking mechanism
   override def get(k: K): F[Option[V]] = createFileIfAbsent.flatMap(_ => fs2f.getOne[F, K, V](k))
 
   override def put(k: K, v: V): F[Unit] = createFileIfAbsent.flatMap(_ => fs2f.putOne(k, v))

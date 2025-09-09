@@ -7,9 +7,28 @@ import fs2.{Pipe, Pull, Stream, text}
 
 class Fs2File(path: Path) {
 
+  // Encode special characters to prevent issues with line-based processing
+  private def encodeValue(value: String): String = {
+    value
+      .replace("\\", "\\\\")  // Escape backslash first
+      .replace("\n", "\\n")   // Escape newline
+      .replace("\r", "\\r")   // Escape carriage return
+      .replace("\t", "\\t")   // Escape tab
+  }
+  
+  // Decode special characters when reading
+  private def decodeValue(value: String): String = {
+    value
+      .replace("\\n", "\n")   // Unescape newline
+      .replace("\\r", "\r")   // Unescape carriage return
+      .replace("\\t", "\t")   // Unescape tab
+      .replace("\\\\", "\\")  // Unescape backslash last
+  }
+
   def validateChunkData(string: String, key: String): Boolean = string.split(regex).head.equals(key)
 
   def replaceKeyOrAppend[F[_]](key: String, value: String): Pipe[F, String, String] = {
+    val encodedValue = encodeValue(value)
     def go(stream: Stream[F, String], insertedOrReplace: Boolean, key: String, value: String): Pull[F, String, Unit] = {
       stream.pull.uncons.flatMap {
 
@@ -27,7 +46,7 @@ class Fs2File(path: Path) {
       }
     }
 
-    s => Stream.suspend(go(s, insertedOrReplace = false, key, value).stream)
+    s => Stream.suspend(go(s, insertedOrReplace = false, key, encodedValue).stream)
   }
 
   private val regex = "\\$\\$"
@@ -45,9 +64,13 @@ class Fs2File(path: Path) {
     Files[F].readAll(path)
       .through(text.utf8.decode)
       .through(text.lines) //.debug()
-      .filter(x => x.split(regex).head.asInstanceOf[K].equals(key))
+      .filter(x => x.contains("$$") && x.split(regex).head.asInstanceOf[K].equals(key))
       .compile
-      .toList.map(x => x.map(_.split(regex)(1)).map(_.asInstanceOf[V]))
+      .toList.map(x => x.map { line =>
+        val parts = line.split(regex, 2)
+        val value = if (parts.length > 1) decodeValue(parts(1)) else ""
+        value.asInstanceOf[V]
+      })
   }
 
   def getOne[F[_] : Files : Concurrent, K, V](key: K): F[Option[V]] = getAll[F, K, V](key).map(x => x.headOption)
@@ -74,7 +97,7 @@ class Fs2File(path: Path) {
     val restoreToFile = Files[F].readAll(path)
       .through(text.utf8.decode)
       .through(text.lines)
-      .filter(x => !x.split(regex).head.asInstanceOf[K].equals(key))
+      .filter(x => !x.contains("$$") || !x.split(regex).head.asInstanceOf[K].equals(key))
       .intersperse("\n")
       .through(text.utf8.encode)
       .through(Files[F].writeAll(newFile))

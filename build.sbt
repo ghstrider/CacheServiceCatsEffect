@@ -14,7 +14,12 @@ lazy val cacheService = (project in file(".")).settings(
     "dev.profunktor" %% "redis4cats-effects" % "1.0.0",
     "dev.profunktor" %% "redis4cats-log4cats" % "1.0.0",
     "org.typelevel" %% "log4cats-slf4j" % "2.1.1",
-    "org.scalatest" %% "scalatest" % "3.2.17" % Test
+    "com.typesafe" % "config" % "1.4.2",
+    "com.github.pureconfig" %% "pureconfig" % "0.17.1",
+    "com.github.pureconfig" %% "pureconfig-cats-effect" % "0.17.1",
+    "org.scalatest" %% "scalatest" % "3.2.17" % Test,
+    "org.scalamock" %% "scalamock" % "5.2.0" % Test,
+    "org.typelevel" %% "cats-effect-testing-scalatest" % "1.4.0" % Test
   ),
   mainClass := Some("com.arya.cli.Cli"),
   assembly / mainClass := Some("com.arya.cli.Cli"),
