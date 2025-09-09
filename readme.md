@@ -2,6 +2,22 @@
 
 A Scala-based cache management service built with Cats Effect and functional programming principles. This service provides a flexible key-value store abstraction with support for multiple storage backends and a layered caching strategy.
 
+### Quick Start
+
+```bash
+# Clone the repository
+git clone <repository-url>
+cd CacheServiceCatsEffect
+
+# Build the CLI JAR
+sbt cli/assembly
+
+# Use the cache service
+java -jar cli/target/scala-2.13/cache-service-cli.jar put --key hello --value world
+java -jar cli/target/scala-2.13/cache-service-cli.jar get --key hello
+# Output: world
+```
+
 ### Overview
 
 This project implements a cache management system that:
@@ -112,11 +128,100 @@ src/
 # Run tests
 sbt test
 
-# Create executable JAR
-sbt assembly
+# Run tests for specific module
+sbt core/test
+sbt cli/test
 
-# Run with SBT
-sbt "run get mykey"
-sbt "run put mykey myvalue"
-sbt "run del mykey"
+# Compile all modules
+sbt compile
+
+# Run with SBT (requires specifying the main class)
+sbt "cli/runMain com.arya.cli.Cli get --key mykey"
+sbt "cli/runMain com.arya.cli.Cli put --key mykey --value myvalue"
+sbt "cli/runMain com.arya.cli.Cli del --key mykey"
+```
+
+### Building Standalone JAR
+
+The CLI module can be packaged as a standalone executable JAR file that includes all dependencies.
+
+```bash
+# Build the JAR
+sbt cli/assembly
+
+# The JAR will be created at:
+# cli/target/scala-2.13/cache-service-cli.jar
+```
+
+### Using the Standalone JAR
+
+Once built, the JAR can be executed directly with Java:
+
+#### Store a value (PUT operation)
+```bash
+java -jar cli/target/scala-2.13/cache-service-cli.jar put --key mykey --value "my value"
+# Output: Successfully stored key 'mykey'
+```
+
+#### Retrieve a value (GET operation)
+```bash
+java -jar cli/target/scala-2.13/cache-service-cli.jar get --key mykey
+# Output: my value
+```
+
+#### Delete a key (DELETE operation)
+```bash
+java -jar cli/target/scala-2.13/cache-service-cli.jar del --key mykey
+# Output: Successfully deleted key 'mykey'
+```
+
+#### Get non-existent key
+```bash
+java -jar cli/target/scala-2.13/cache-service-cli.jar get --key nonexistent
+# Output: Key 'nonexistent' not found
+# Exit code: 1 (error)
+```
+
+### Data Persistence
+
+The cache service uses file-based storage by default, storing data in `filestore.kv` in the current working directory. This means:
+- Data persists between JAR executions
+- Multiple JAR invocations can share the same data
+- The file is created automatically if it doesn't exist
+
+### Examples
+
+#### Complete workflow example
+```bash
+# Build the JAR
+sbt cli/assembly
+
+# Store some data
+java -jar cli/target/scala-2.13/cache-service-cli.jar put --key user:1 --value "John Doe"
+java -jar cli/target/scala-2.13/cache-service-cli.jar put --key user:2 --value "Jane Smith"
+
+# Retrieve the data
+java -jar cli/target/scala-2.13/cache-service-cli.jar get --key user:1
+# Output: John Doe
+
+java -jar cli/target/scala-2.13/cache-service-cli.jar get --key user:2
+# Output: Jane Smith
+
+# Delete a key
+java -jar cli/target/scala-2.13/cache-service-cli.jar del --key user:1
+
+# Verify deletion
+java -jar cli/target/scala-2.13/cache-service-cli.jar get --key user:1
+# Output: Key 'user:1' not found
+```
+
+#### Using the JAR from any directory
+```bash
+# Copy the JAR to a convenient location
+cp cli/target/scala-2.13/cache-service-cli.jar ~/bin/kvstore.jar
+
+# Use it from anywhere
+cd /any/directory
+java -jar ~/bin/kvstore.jar put --key config --value "production"
+java -jar ~/bin/kvstore.jar get --key config
 ```

@@ -18,10 +18,74 @@
       "problemMatcher": "$scala"
     },
     {
+      "label": "sbt: compile core",
+      "type": "shell",
+      "command": "sbt",
+      "args": ["core/compile"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": true,
+        "clear": false
+      },
+      "problemMatcher": "$scala"
+    },
+    {
+      "label": "sbt: compile cli",
+      "type": "shell",
+      "command": "sbt",
+      "args": ["cli/compile"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": true,
+        "clear": false
+      },
+      "problemMatcher": "$scala"
+    },
+    {
       "label": "sbt: test",
       "type": "shell",
       "command": "sbt",
       "args": ["test"],
+      "group": "test",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": true,
+        "clear": false
+      },
+      "problemMatcher": "$scala"
+    },
+    {
+      "label": "sbt: test core",
+      "type": "shell",
+      "command": "sbt",
+      "args": ["core/test"],
+      "group": "test",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": true,
+        "clear": false
+      },
+      "problemMatcher": "$scala"
+    },
+    {
+      "label": "sbt: test cli",
+      "type": "shell",
+      "command": "sbt",
+      "args": ["cli/test"],
       "group": "test",
       "presentation": {
         "echo": true,
@@ -132,7 +196,7 @@
       "label": "Run CLI: get",
       "type": "shell",
       "command": "sbt",
-      "args": ["runMain com.arya.cli.Cli", "get", "--key", "${input:cacheKey}"],
+      "args": ["cli/runMain com.arya.cli.Cli", "get", "--key", "${input:cacheKey}"],
       "group": "build",
       "presentation": {
         "echo": true,
@@ -145,7 +209,7 @@
       "label": "Run CLI: put",
       "type": "shell",
       "command": "sbt",
-      "args": ["runMain com.arya.cli.Cli", "put", "--key", "${input:cacheKey}", "--value", "${input:cacheValue}"],
+      "args": ["cli/runMain com.arya.cli.Cli", "put", "--key", "${input:cacheKey}", "--value", "${input:cacheValue}"],
       "group": "build",
       "presentation": {
         "echo": true,
@@ -158,7 +222,7 @@
       "label": "Run CLI: delete",
       "type": "shell",
       "command": "sbt",
-      "args": ["runMain com.arya.cli.Cli", "del", "--key", "${input:cacheKey}"],
+      "args": ["cli/runMain com.arya.cli.Cli", "del", "--key", "${input:cacheKey}"],
       "group": "build",
       "presentation": {
         "echo": true,
