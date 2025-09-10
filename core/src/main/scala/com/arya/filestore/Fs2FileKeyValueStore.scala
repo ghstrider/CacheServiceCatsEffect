@@ -5,6 +5,7 @@ import cats.Monad
 import cats.effect.Concurrent
 import com.arya.dsl.KeyValueStore
 import fs2.io.file.{Files, Path}
+import scala.concurrent.duration.FiniteDuration
 
 
 class Fs2FileKeyValueStore[F[_] : Files : Concurrent : Monad, K, V](filename: String, path: String) extends KeyValueStore[F, K, V]{
@@ -24,5 +25,11 @@ class Fs2FileKeyValueStore[F[_] : Files : Concurrent : Monad, K, V](filename: St
 
   override def put(k: K, v: V): F[Unit] = createFileIfAbsent.flatMap(_ => fs2f.putOne(k, v))
 
+  override def putWithTTL(k: K, v: V, ttl: FiniteDuration): F[Unit] = 
+    put(k, v)  // Basic implementation ignores TTL
+
   override def delete(k: K): F[Unit] = createFileIfAbsent.flatMap(_ => fs2f.delete(k))
+
+  override def ttl(k: K): F[Option[FiniteDuration]] = 
+    Monad[F].pure(None)  // Basic implementation has no TTL support
 }

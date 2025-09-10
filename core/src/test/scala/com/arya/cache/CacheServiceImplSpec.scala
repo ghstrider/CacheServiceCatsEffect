@@ -6,6 +6,7 @@ import com.arya.dsl.KeyValueStore
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AsyncWordSpec
 import org.scalamock.scalatest.MockFactory
+import scala.concurrent.duration._
 
 class CacheServiceImplSpec extends AsyncWordSpec with AsyncIOSpec with Matchers with MockFactory {
   
@@ -154,6 +155,84 @@ class CacheServiceImplSpec extends AsyncWordSpec with AsyncIOSpec with Matchers 
       } yield retrieved
       
       result.asserting(_ shouldBe Some(specialValue))
+    }
+    
+    "store value with TTL" in {
+      val mockStore = mock[KeyValueStore[IO, String, String]]
+      val key = "ttl-key"
+      val value = "ttl-value"
+      val ttl = 30.seconds
+      
+      (mockStore.putWithTTL _).expects(key, value, ttl).returning(IO.unit)
+      (mockStore.get _).expects(key).returning(IO.pure(Some(value)))
+      
+      implicit val kvStore: KeyValueStore[IO, String, String] = mockStore
+      val cacheService = CacheServiceImpl[IO]
+      
+      val result = for {
+        _ <- cacheService.putWithTTL(key, value, ttl)
+        retrieved <- cacheService.get(key)
+      } yield retrieved
+      
+      result.asserting(_ shouldBe Some(value))
+    }
+    
+    "retrieve TTL for a key" in {
+      val mockStore = mock[KeyValueStore[IO, String, String]]
+      val key = "ttl-check-key"
+      val remainingTtl = 25.seconds
+      
+      (mockStore.ttl _).expects(key).returning(IO.pure(Some(remainingTtl)))
+      
+      implicit val kvStore: KeyValueStore[IO, String, String] = mockStore
+      val cacheService = CacheServiceImpl[IO]
+      
+      cacheService.ttl(key).asserting(_ shouldBe Some(remainingTtl))
+    }
+    
+    "return None for TTL when key has no expiration" in {
+      val mockStore = mock[KeyValueStore[IO, String, String]]
+      val key = "no-ttl-key"
+      
+      (mockStore.ttl _).expects(key).returning(IO.pure(None))
+      
+      implicit val kvStore: KeyValueStore[IO, String, String] = mockStore
+      val cacheService = CacheServiceImpl[IO]
+      
+      cacheService.ttl(key).asserting(_ shouldBe None)
+    }
+    
+    "handle full TTL workflow" in {
+      val mockStore = mock[KeyValueStore[IO, String, String]]
+      val key = "workflow-key"
+      val value = "workflow-value"
+      val ttl = 60.seconds
+      val remainingTtl = 45.seconds
+      
+      inSequence {
+        (mockStore.putWithTTL _).expects(key, value, ttl).returning(IO.unit)
+        (mockStore.get _).expects(key).returning(IO.pure(Some(value)))
+        (mockStore.ttl _).expects(key).returning(IO.pure(Some(remainingTtl)))
+        (mockStore.delete _).expects(key).returning(IO.unit)
+        (mockStore.ttl _).expects(key).returning(IO.pure(None))
+      }
+      
+      implicit val kvStore: KeyValueStore[IO, String, String] = mockStore
+      val cacheService = CacheServiceImpl[IO]
+      
+      val result = for {
+        _ <- cacheService.putWithTTL(key, value, ttl)
+        retrieved <- cacheService.get(key)
+        currentTtl <- cacheService.ttl(key)
+        _ <- cacheService.del(key)
+        ttlAfterDelete <- cacheService.ttl(key)
+      } yield (retrieved, currentTtl, ttlAfterDelete)
+      
+      result.asserting { case (retrieved, currentTtl, ttlAfterDelete) =>
+        retrieved shouldBe Some(value)
+        currentTtl shouldBe Some(remainingTtl)
+        ttlAfterDelete shouldBe None
+      }
     }
   }
 }
