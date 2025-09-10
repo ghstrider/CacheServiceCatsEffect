@@ -48,9 +48,35 @@ lazy val cli = (project in file("cli"))
   )
   .enablePlugins(sbtassembly.AssemblyPlugin)
 
+// WebAPI module - HTTP REST API
+lazy val webapi = (project in file("webapi"))
+  .dependsOn(core)
+  .settings(
+    name := "cache-service-webapi",
+    libraryDependencies ++= commonDependencies ++ Seq(
+      // Http4s
+      "org.http4s" %% "http4s-core" % "0.23.18",
+      "org.http4s" %% "http4s-dsl" % "0.23.18",
+      "org.http4s" %% "http4s-ember-server" % "0.23.18",
+      "org.http4s" %% "http4s-circe" % "0.23.18",
+      
+      // JSON
+      "io.circe" %% "circe-core" % "0.14.5",
+      "io.circe" %% "circe-generic" % "0.14.5",
+      "io.circe" %% "circe-parser" % "0.14.5"
+    ) ++ testDependencies,
+    assembly / mainClass := Some("com.arya.webapi.WebApiServer"),
+    assembly / assemblyJarName := "cache-service-webapi.jar",
+    assembly / assemblyMergeStrategy := {
+      case PathList("META-INF", xs@_*) => MergeStrategy.discard
+      case _ => MergeStrategy.first
+    }
+  )
+  .enablePlugins(sbtassembly.AssemblyPlugin)
+
 // Root project
 lazy val root = (project in file("."))
-  .aggregate(core, cli)
+  .aggregate(core, cli, webapi)
   .settings(
     name := "cache-service",
     publish := {},
